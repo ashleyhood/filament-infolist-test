@@ -74,49 +74,26 @@ class ClientResource extends Resource
     {
         return $infolist
             ->schema([
-                Infolists\Components\Tabs::make('Heading')->tabs([
-                    Infolists\Components\Tabs\Tab::make('Details')
-                        ->icon('heroicon-o-user')
+                RepeatableEntry::make('openReferralAppointments')->schema([
+                    TextEntry::make('id'),
+                    TextEntry::make('start_at'),
+                    TextEntry::make('status'),
+
+                    RepeatableEntry::make('contactLog.notes')->schema([
+                        TextEntry::make('id'),
+                        TextEntry::make('name'),
+                        TextEntry::make('body'),
+                    ]),
+
+                    Infolists\Components\Section::make('Contact Log - Notes')
+                        ->description('When the RepeatableEntry is wrapped in a Section/Grid/Group the notes are always the same.')
                         ->schema([
-                            Infolists\Components\Grid::make()->schema([
-                                TextEntry::make('title'),
-                                TextEntry::make('first_name'),
-                                TextEntry::make('last_name'),
+                            RepeatableEntry::make('contactLog.notes')->schema([
+                                TextEntry::make('id'),
+                                TextEntry::make('name'),
+                                TextEntry::make('body'),
                             ]),
-                        ]),
-                        Infolists\Components\Tabs\Tab::make('Current referral')
-                        ->icon('heroicon-o-clock')
-                        ->schema([
-                            Infolists\Components\Grid::make()->relationship('openReferral')->schema([
-                                RepeatableEntry::make('appointments')
-                                    ->hiddenLabel()
-                                    ->schema([
-                                        TextEntry::make('id'),
-                                        TextEntry::make('start_at'),
-                                        TextEntry::make('status'),
-
-                                        RepeatableEntry::make('contactLog.notes')
-                                            ->schema([
-                                                TextEntry::make('id'),
-                                                TextEntry::make('name'),
-                                                TextEntry::make('body'),
-                                            ]),
-
-                                        Infolists\Components\Section::make('Contact Log - Notes')
-                                            ->description('When the RepeatableEntry is wrapped in a Section/Grid/Group the notes are always the same.')
-                                            ->schema([
-                                                RepeatableEntry::make('contactLog.notes')
-                                                    ->schema([
-                                                        TextEntry::make('id'),
-                                                        TextEntry::make('name'),
-                                                        TextEntry::make('body'),
-                                                    ]),
-                                        ]),
-                                    ])
-                            ])
-                            ->columns(1)
-                            ->columnSpanFull(),
-                        ]),
+                    ]),
                 ])->columnSpanFull(),
             ]);
     }
